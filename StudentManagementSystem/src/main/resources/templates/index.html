@@ -22,10 +22,14 @@
             <thead>
                 <tr>
                 	<th>Student Roll Number</th>
-                    <th>Student First Name</th>
-                    <th>Student Last Name</th>
-                    <th>Student Email</th>
-                    <th>Student Grade</th>
+                    <th><a th:href="@{'/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}">
+                    Student First Name</th>
+                    <th><a th:href="@{'/page/' + ${currentPage} + '?sortField=lastName&sortDir=' + ${reverseSortDir}}">
+                    Student Last Name</th>
+                    <th><a th:href="@{'/page/' + ${currentPage} + '?sortField=email&sortDir=' + ${reverseSortDir}}">
+                    Student Email</th>
+                    <th><a th:href="@{'/page/' + ${currentPage} + '?sortField=grade&sortDir=' + ${reverseSortDir}}">
+                    Student Grade</th>
                     <th> Actions </th>
                 </tr>
             </thead>
@@ -43,30 +47,30 @@
             </tbody>
         </table>
         
-        <!---Start - Added for pagination--->
-        <div th:if="${totalPages > 1}">
-    <div class="row col-sm-10">
-        <div class="col-sm-2">
-            Total Rows: [[${totalItems}]]
-        </div>
-        <div class="col-sm-1">
-            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-      <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}}">[[${i}]]</a>
-      <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-            </span>
-        </div>
-        <div class="col-sm-1">
-            <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}}">Next</a>
-            <span th:unless="${currentPage < totalPages}">Next</span>
-        </div>
-
-        <div class="col-sm-1">
-            <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}}">Last</a>
-            <span th:unless="${currentPage < totalPages}">Last</span>
-        </div>
+        <!---Start - Added for pagination and sorting--->
+       <div th:if = "${totalPages > 1}">
+   <div class = "row col-sm-10">
+    <div class = "col-sm-2">
+     Total Rows: [[${totalItems}]] 
     </div>
+    <div class = "col-sm-1">
+     <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+      <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+      <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+     </span>
     </div>
-    <!---End - Added for pagination--->
+    <div class = "col-sm-1">
+     <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+     <span th:unless="${currentPage < totalPages}">Next</span>
+    </div>
+    
+     <div class="col-sm-1">
+        <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+     <span th:unless="${currentPage < totalPages}">Last</span>
+        </div>
+   </div>
+  </div>
+    <!---End - Added for pagination and sorting--->
     </div>
 </body>
 </html>

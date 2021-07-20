@@ -30,7 +30,9 @@ public class StudentController {
        //model.addAttribute("listStudents", studentService.getAllStudents());
         //return "index";
     	//Added for pagination logic
-        return findPaginated(1, model); 
+        //return findPaginated(1, model);
+    	//Added for pagination and sorting logic
+        return findPaginated(1, "firstName", "asc", model);
     }
     
     @GetMapping("/showNewStudentForm")
@@ -94,15 +96,24 @@ public class StudentController {
     
     //Added for pagination
     @GetMapping("/page/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
+    		@RequestParam("sortField") String sortField,
+    	    @RequestParam("sortDir") String sortDir, 
+    	    Model model) {
         int pageSize = 5;
 
-        Page < Student > page = studentService.findPaginated(pageNo, pageSize);
+        Page < Student > page = studentService.findPaginated(pageNo, pageSize, sortField, sortDir);
         List < Student > listStudents = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
+        
+        //Added sorting logic
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        
         model.addAttribute("listStudents", listStudents);
         return "index";
     }
