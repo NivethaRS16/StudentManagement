@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +27,10 @@ public class StudentController {
     // display list of students
     @GetMapping("/")
     public String viewHomePage(Model model) {
-        model.addAttribute("listStudents", studentService.getAllStudents());
-        return "index";
+       //model.addAttribute("listStudents", studentService.getAllStudents());
+        //return "index";
+    	//Added for pagination logic
+        return findPaginated(1, model); 
     }
     
     @GetMapping("/showNewStudentForm")
@@ -87,5 +90,20 @@ public class StudentController {
         	model.addAttribute("errorMessage","Student does not exist !! ");
         	return "search_student";
         }
+    }
+    
+    //Added for pagination
+    @GetMapping("/page/{pageNo}")
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
+        int pageSize = 5;
+
+        Page < Student > page = studentService.findPaginated(pageNo, pageSize);
+        List < Student > listStudents = page.getContent();
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listStudents", listStudents);
+        return "index";
     }
 }
